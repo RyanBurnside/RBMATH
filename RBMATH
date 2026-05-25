@@ -1,0 +1,304 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+
+(FILECREATED "24-May-2026 21:25:28" {DSK}<home>ryan>il>RBMATH.;23 7805   
+
+      :CHANGES-TO (VARS RBMATHCOMS)
+                  (FNS V3F.ANGLEBETWEEN V3F.LERP V3F.LERP! LERP! V3F.RANDOM3D V3F.RANDOM3D! 
+                       V3F.RANDOM2D! V3F.RANDOM2D V3F.HEADING V3F.HEADING!)
+
+      :PREVIOUS-DATE "24-May-2026 20:16:35" {DSK}<home>ryan>il>RBMATH.;18)
+
+
+(PRETTYCOMPRINT RBMATHCOMS)
+
+(RPAQQ RBMATHCOMS
+       ((RECORDS V3F)
+        (FNS V3F.ADD V3F.ADD! V3F.ANGLEBETWEEN V3F.COPY V3F.COPY! V3F.CROSS V3F.CROSS! V3F.DIST 
+             V3F.DIV V3F.DIV! V3F.DOT V3F.HEADING V3F.HEADING! V3F.LERP V3F.LERP! V3F.LIMIT 
+             V3F.LIMIT! V3F.MAG V3F.MAGSQ V3F.NEW V3F.NORMALIZE V3F.NORMALIZE! V3F.RANDOM2D 
+             V3F.RANDOM2D! V3F.RANDOM3D V3F.RANDOM3D! V3F.SCALE V3F.SCALE! V3F.SETMAG V3F.SETMAG! 
+             V3F.SETX V3F.SETXYZ V3F.SETY V3F.SETZ V3F.SUB V3F.SUB! V3F.X V3F.Y V3F.Z)))
+(DECLARE%: EVAL@COMPILE
+
+(DATATYPE V3F ((X FLOATP)
+               (Y FLOATP)
+               (Z FLOATP)))
+)
+
+(/DECLAREDATATYPE 'V3F '(FLOATP FLOATP FLOATP)
+       '((V3F 0 FLOATP)
+         (V3F 2 FLOATP)
+         (V3F 4 FLOATP))
+       '6)
+(DEFINEQ
+
+(V3F.ADD
+  [LAMBDA (V3F1 V3F2)
+    (V3F.ADD! (V3F.COPY V3F1)
+           V3F2])
+
+(V3F.ADD!
+  [LAMBDA (V3F1 V3F2)
+    (with V3F V3F1 (add X (V3F.X V3F2))
+          (add Y (V3F.Y V3F2))
+          (add Z (V3F.Z V3F2)))
+    V3F1])
+
+(V3F.ANGLEBETWEEN
+  [LAMBDA (V3F1 V3F2)
+    (LET ((M1 (V3F.MAG V3F1))
+          (M2 (V3F.MAG V3F2)))
+         (if (OR (EQ M1 0.0)
+                 (EQ M2 0.0))
+             then 0.0
+           else (LET* [(DOT (V3F.DOT V3F1 V3F2))
+                       (AMT (FQUOTIENT DOT (FTIMES M1 M2]
+                      (ARCCOS (MAX (MIN AMT 1.0)
+                                   -1.0)
+                             T])
+
+(V3F.COPY
+  [LAMBDA (V3F)
+    (NCREATE 'V3F V3F])
+
+(V3F.COPY!
+  [LAMBDA (V3F1 V3F2)
+    (V3F.SETXYZ V3F1 (fetch (V3F X) of V3F2)
+           (fetch (V3F Y) of V3F2)
+           (fetch (V3F Z) of V3F2))
+    V3F1])
+
+(V3F.CROSS
+  [LAMBDA (V3F1 V3F2)
+    (V3F.CROSS! (V3F.COPY V3F1)
+           V3F2])
+
+(V3F.CROSS!
+  [LAMBDA (V3F1 V3F2)
+    (LET ((X1 (V3F.X V3F1))
+          (Y1 (V3F.Y V3F1))
+          (Z1 (V3F.Z V3F1))
+          (X2 (V3F.X V3F2))
+          (Y2 (V3F.Y V3F2))
+          (Z2 (V3F.Z V3F2)))
+         (V3F.SETXYZ V3F1 (DIFFERENCE (FTIMES Y1 Z2)
+                                 (FTIMES Z1 Y2))
+                (DIFFERENCE (FTIMES Z1 X2)
+                       (FTIMES X1 Z2))
+                (DIFFERENCE (FTIMES X1 Y2)
+                       (FTIMES Y1 X2])
+
+(V3F.DIST
+  [LAMBDA (V3F1 V3F2)
+    (LET [(DX (DIFFERENCE (V3F.X V3F1)
+                     (V3F.X V3F2)))
+          (DY (DIFFERENCE (V3F.Y V3F1)
+                     (V3F.Y V3F2)))
+          (DZ (DIFFERENCE (V3F.Z V3F1)
+                     (V3F.Z V3F2]
+         (SQRT (PLUS (FTIMES DX DX)
+                     (FTIMES DY DY)
+                     (FTIMES DZ DZ])
+
+(V3F.DIV
+  [LAMBDA (V3F1 N)
+    (V3F.DIV! (V3F.COPY V3F1)
+           N])
+
+(V3F.DIV!
+  [LAMBDA (V3F1 N)
+    (with V3F V3F1 (SETQ X (FQUOTIENT X N))
+          (SETQ Y (FQUOTIENT Y N))
+          (SETQ Z (FQUOTIENT Z N)))
+    V3F1])
+
+(V3F.DOT
+  [LAMBDA (V3F1 V3F2)
+    (PLUS (FTIMES (V3F.X V3F1)
+                 (V3F.X V3F2))
+          (FTIMES (V3F.Y V3F1)
+                 (V3F.Y V3F2))
+          (FTIMES (V3F.Z V3F1)
+                 (V3F.Z V3F2])
+
+(V3F.HEADING
+  [LAMBDA (V3F)
+    (CL:ATAN (V3F.Y V3F)
+           (V3F.X V3F])
+
+(V3F.HEADING!
+  [LAMBDA (V3F ANGLE)
+    (LET ((M (V3F.MAG V3F)))
+         (V3F.SETXYZ V3F (FTIMES M (COS ANGLE))
+                (FTIMES M (SIN ANGLE))
+                (V3F.Z V3F])
+
+(V3F.LERP
+  [LAMBDA (V3F1 V3F2 AMT)
+    (V3F.LERP! (V3F.COPY V3F1)
+           V3F2 AMT])
+
+(V3F.LERP!
+  [LAMBDA (V3F1 V3F2 AMT)
+    [with V3F V3F1 [SETQ X (PLUS X (FTIMES AMT (DIFFERENCE (V3F.X V3F2)
+                                                      X]
+          [SETQ Y (PLUS Y (FTIMES AMT (DIFFERENCE (V3F.Y V3F2)
+                                             Y]
+          (SETQ Z (PLUS Z (FTIMES AMT (DIFFERENCE (V3F.Z V3F2)
+                                             Z]
+    V3F1])
+
+(V3F.LIMIT
+  [LAMBDA (V3F MAXMAG)
+    (V3F.LIMIT! (V3F.COPY V3F)
+           MAXMAG])
+
+(V3F.LIMIT!
+  [LAMBDA (V3F MAXMAG)
+    (if (> (V3F.MAGSQ V3F)
+           (FTIMES MAXMAG MAXMAG))
+        then (V3F.NORMALIZE! V3F)
+             (V3F.SCALE! V3F MAXMAG)
+      else V3F])
+
+(V3F.MAG
+  [LAMBDA (V3F)
+    (SQRT (V3F.MAGSQ V3F])
+
+(V3F.MAGSQ
+  [LAMBDA (V3F)
+    (with V3F V3F (PLUS (FTIMES X X)
+                        (FTIMES Y Y)
+                        (FTIMES Z Z])
+
+(V3F.NEW
+  [LAMBDA (X Y Z)
+    (create V3F
+           X _ X
+           Y _ Y
+           Z _ Z])
+
+(V3F.NORMALIZE
+  [LAMBDA (V3F)
+    (V3F.NORMALIZE! (V3F.COPY V3F])
+
+(V3F.NORMALIZE!
+  [LAMBDA (V3F)
+    (LET ((M (V3F.MAG V3F)))
+         (IF (> M 0.0)
+             THEN (V3F.DIV! V3F M)
+           ELSE V3F])
+
+(V3F.RANDOM2D
+  [LAMBDA NIL
+    (V3F.RANDOM2D! (V3F.NEW 0.0 0.0 0.0])
+
+(V3F.RANDOM2D!
+  [LAMBDA (V3F)
+    (LET* ((TWO-PI (FTIMES 2.0 3.1415927))
+           (ANGLE (FTIMES (RAND 1.0)
+                         TWO-PI)))
+          (V3F.SETXYZ V3F (COS ANGLE)
+                 (SIN ANGLE)
+                 0.0])
+
+(V3F.RANDOM3D
+  [LAMBDA NIL
+    (V3F.RANDOM3D! (V3F.NEW 0.0 0.0 0.0])
+
+(V3F.RANDOM3D!
+  [LAMBDA (V3F)
+    (LET* [(TWO-PI (FTIMES 2.0 3.1415927))
+           (ANGLE (FTIMES (RAND 0.0 1.0)
+                         TWO-PI))
+
+           (* ;; " Uniformly pick Z distribution between -1.0 and 1.0")
+
+           (RAND-Z (DIFFERENCE (FTIMES (RAND 0.0 1.0)
+                                      2.0)
+                          1.0))
+
+           (* ;; " Calculate the planar radius remaining for X and Y components")
+
+           (R-BASE (SQRT (DIFFERENCE 1.0 (FTIMES RAND-Z RAND-Z]
+          (V3F.SETXYZ V3F (FTIMES R-BASE (COS ANGLE))
+                 (FTIMES R-BASE (SIN ANGLE))
+                 RAND-Z])
+
+(V3F.SCALE
+  [LAMBDA (V3F1 N)
+    (V3F.SCALE! (V3F.COPY V3F1)
+           N])
+
+(V3F.SCALE!
+  [LAMBDA (V3F1 N)
+    (with V3F V3F1 (SETQ X (FTIMES X N))
+          (SETQ Y (FTIMES Y N))
+          (SETQ Z (FTIMES Z N)))
+    V3F1])
+
+(V3F.SETMAG
+  [LAMBDA (V3F NEWMAG)
+    (V3F.SETMAG! (V3F.COPY V3F)
+           NEWMAG])
+
+(V3F.SETMAG!
+  [LAMBDA (V3F NEWMAG)
+    (V3F.NORMALIZE! V3F)
+    (V3F.MULT! V3F NEWMAG])
+
+(V3F.SETX
+  [LAMBDA (V3F X)
+    (replace (V3F X) of V3F with X])
+
+(V3F.SETXYZ
+  [LAMBDA (V3F X Y Z)
+    (replace X of V3F with X)
+    (replace Y of V3F with Y)
+    (replace Z of V3F with Z)
+    V3F])
+
+(V3F.SETY
+  [LAMBDA (V3F Y)
+    (replace (V3F Y) of V3F with Y])
+
+(V3F.SETZ
+  [LAMBDA (V3F Z)
+    (replace (V3F Z) of V3F with Z])
+
+(V3F.SUB
+  [LAMBDA (V3F1 V3F2)
+    (V3F.SUB! (V3F.COPY V3F1)
+           V3F2])
+
+(V3F.SUB!
+  [LAMBDA (V3F1 V3F2)
+    [with V3F V3F1 (SETQ X (FDIFFERENCE X (V3F.X V3F2)))
+          (SETQ Y (FDIFFERENCE Y (V3F.Y V3F2)))
+          (SETQ Z (FDIFFERENCE Z (V3F.Z V3F2]
+    V3F1])
+
+(V3F.X
+  [LAMBDA (V3F)
+    (fetch (V3F X) of V3F])
+
+(V3F.Y
+  [LAMBDA (V3F)
+    (fetch (V3F Y) of V3F])
+
+(V3F.Z
+  [LAMBDA (V3F)
+    (fetch (V3F Z) of V3F])
+)
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (1224 7782 (V3F.ADD 1234 . 1324) (V3F.ADD! 1326 . 1503) (V3F.ANGLEBETWEEN 1505 . 1944) (
+V3F.COPY 1946 . 1999) (V3F.COPY! 2001 . 2192) (V3F.CROSS 2194 . 2288) (V3F.CROSS! 2290 . 2790) (
+V3F.DIST 2792 . 3183) (V3F.DIV 3185 . 3269) (V3F.DIV! 3271 . 3433) (V3F.DOT 3435 . 3679) (V3F.HEADING 
+3681 . 3770) (V3F.HEADING! 3772 . 3968) (V3F.LERP 3970 . 4070) (V3F.LERP! 4072 . 4490) (V3F.LIMIT 4492
+ . 4588) (V3F.LIMIT! 4590 . 4802) (V3F.MAG 4804 . 4863) (V3F.MAGSQ 4865 . 5011) (V3F.NEW 5013 . 5116) 
+(V3F.NORMALIZE 5118 . 5196) (V3F.NORMALIZE! 5198 . 5362) (V3F.RANDOM2D 5364 . 5445) (V3F.RANDOM2D! 
+5447 . 5690) (V3F.RANDOM3D 5692 . 5773) (V3F.RANDOM3D! 5775 . 6415) (V3F.SCALE 6417 . 6505) (
+V3F.SCALE! 6507 . 6662) (V3F.SETMAG 6664 . 6762) (V3F.SETMAG! 6764 . 6860) (V3F.SETX 6862 . 6942) (
+V3F.SETXYZ 6944 . 7117) (V3F.SETY 7119 . 7199) (V3F.SETZ 7201 . 7281) (V3F.SUB 7283 . 7373) (V3F.SUB! 
+7375 . 7588) (V3F.X 7590 . 7652) (V3F.Y 7654 . 7716) (V3F.Z 7718 . 7780)))))
+STOP
