@@ -1,31 +1,72 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "27-May-2026 23:24:52" {DSK}<home>ryan>il>RBMATH.;50 12440  
+(FILECREATED "29-May-2026 16:08:36" {DSK}<home>ryan>il>RBMATH.;55 17119  
 
-      :CHANGES-TO (FNS RB.COHERENTNOISE RB.NOISEGRAPH RB.INTEGERNOISE)
-                  (VARS RBMATHCOMS)
+      :CHANGES-TO (VARS RBMATHCOMS)
+                  (FNS V3F.PRINT V3F.ZEROP RB.CARTTOPOL RB.SMOOTHSTEP RB.INTERPOLATEEASEIN 
+                       RB.INTERPOLATEEASEOUT RB.INTERPOLATECOS RB.SMOOTHERSTEP)
+                  (RECORDS MATRIX44)
 
-      :PREVIOUS-DATE "27-May-2026 19:09:27" {DSK}<home>ryan>il>RBMATH.;47)
+      :PREVIOUS-DATE "28-May-2026 21:23:43" {DSK}<home>ryan>il>RBMATH.;51)
 
 
 (PRETTYCOMPRINT RBMATHCOMS)
 
 (RPAQQ RBMATHCOMS
-       ((RECORDS V3F)
-        (FNS RB.CLAMP RB.COHERENTNOISE RB.DIST2D RB.DIST3D RB.INTEGERNOISE RB.LERP RB.NOISEGRAPH 
-             RB.SMOOTHSTEP V3F.ADD V3F.ADD! V3F.COPY V3F.COPY! V3F.CROSS V3F.CROSS! V3F.DELTA2D 
-             V3F.DIST V3F.DIV V3F.DIV! V3F.DOT V3F.EQUALP V3F.FROMPOSITION V3F.FROMPOSITION! 
-             V3F.HEADING V3F.HEADING! V3F.LERP V3F.LERP! V3F.LIMIT V3F.LIMIT! V3F.MAG V3F.MAGSQ 
-             V3F.NEGATE V3F.NEGATE! V3F.NEW V3F.NORMALIZE V3F.NORMALIZE! V3F.PERP2D V3F.PERP2D! 
-             V3F.RANDOM2D V3F.RANDOM2D! V3F.RANDOM3D V3F.RANDOM3D! V3F.ROT2D V3F.ROT2D! V3F.SCALE 
-             V3F.SCALE! V3F.SETMAG V3F.SETMAG! V3F.SETX V3F.SETXYZ V3F.SETY V3F.SETZ V3F.SUB V3F.SUB!
-             V3F.SURFACENORMAL V3F.TOPOSITION V3F.X V3F.Y V3F.Z)))
+       ((RECORDS MATRIX44 V3F)
+        (FNS RB.CARTTOPOL RB.CLAMP RB.COHERENTNOISE RB.DIST2D RB.DIST3D RB.INTEGERNOISE 
+             RB.INTERPOLATECOS RB.INTERPOLATEEASEIN RB.INTERPOLATEEASEOUT RB.LERP RB.NOISEGRAPH 
+             RB.POLTOCART RB.SMOOTHERSTEP RB.SMOOTHSTEP V3F.ADD V3F.ADD! V3F.COPY V3F.COPY! V3F.CROSS
+             V3F.CROSS! V3F.DELTA2D V3F.DIST V3F.DIV V3F.DIV! V3F.DOT V3F.EQUALP V3F.FROMPOSITION 
+             V3F.FROMPOSITION! V3F.HEADING V3F.HEADING! V3F.LERP V3F.LERP! V3F.LIMIT V3F.LIMIT! 
+             V3F.MAG V3F.MAGSQ V3F.NEGATE V3F.NEGATE! V3F.NEW V3F.NORMALIZE V3F.NORMALIZE! V3F.PERP2D
+             V3F.PERP2D! V3F.PRINT V3F.RANDOM2D V3F.RANDOM2D! V3F.RANDOM3D V3F.RANDOM3D! V3F.ROT2D 
+             V3F.ROT2D! V3F.SCALE V3F.SCALE! V3F.SETMAG V3F.SETMAG! V3F.SETX V3F.SETXYZ V3F.SETY 
+             V3F.SETZ V3F.SUB V3F.SUB! V3F.SURFACENORMAL V3F.TOPOSITION V3F.X V3F.Y V3F.Z V3F.ZEROP)))
 (DECLARE%: EVAL@COMPILE
+
+(DATATYPE MATRIX44 ((M00 FLOATP)
+                    (M01 FLOATP)
+                    (M02 FLOATP)
+                    (M03 FLOATP)
+                    (M10 FLOATP)
+                    (M11 FLOATP)
+                    (M12 FLOATP)
+                    (M13 FLOATP)
+                    (M20 FLOATP)
+                    (M21 FLOATP)
+                    (M22 FLOATP)
+                    (M23 FLOATP)
+                    (M30 FLOATP)
+                    (M31 FLOATP)
+                    (M32 FLOATP)
+                    (M33 FLOATP)))
 
 (DATATYPE V3F ((X FLOATP)
                (Y FLOATP)
                (Z FLOATP)))
 )
+
+(/DECLAREDATATYPE 'MATRIX44
+       '(FLOATP FLOATP FLOATP FLOATP FLOATP FLOATP FLOATP FLOATP FLOATP FLOATP FLOATP FLOATP FLOATP 
+               FLOATP FLOATP FLOATP)
+       '((MATRIX44 0 FLOATP)
+         (MATRIX44 2 FLOATP)
+         (MATRIX44 4 FLOATP)
+         (MATRIX44 6 FLOATP)
+         (MATRIX44 8 FLOATP)
+         (MATRIX44 10 FLOATP)
+         (MATRIX44 12 FLOATP)
+         (MATRIX44 14 FLOATP)
+         (MATRIX44 16 FLOATP)
+         (MATRIX44 18 FLOATP)
+         (MATRIX44 20 FLOATP)
+         (MATRIX44 22 FLOATP)
+         (MATRIX44 24 FLOATP)
+         (MATRIX44 26 FLOATP)
+         (MATRIX44 28 FLOATP)
+         (MATRIX44 30 FLOATP))
+       '32)
 
 (/DECLAREDATATYPE 'V3F '(FLOATP FLOATP FLOATP)
        '((V3F 0 FLOATP)
@@ -33,6 +74,13 @@
          (V3F 4 FLOATP))
        '6)
 (DEFINEQ
+
+(RB.CARTTOPOL
+  [LAMBDA (X Y)                                              (* Given an X and Y return a pair
+                                                             (Radius . angle))
+    (LET ((R (RB.DIST2D 0 0 X Y))
+          (ANGLE (CL:ATAN Y X)))
+         (CONS R ANGLE])
 
 (RB.CLAMP
   [LAMBDA (N LOW HI)
@@ -87,6 +135,32 @@
                               2.1474836E+9)
                  1.0])
 
+(RB.INTERPOLATECOS
+  [LAMBDA (A B W)                                            (* Use cosine interpolation between A 
+                                                             and B with weight W.)
+    (LET* ((W-CLAMPED (RB.CLAMP W 0.0 1.0))
+           (FT (FTIMES W-CLAMPED CL:PI))
+           (F (FTIMES (FDIFFERENCE 1.0 (COS FT))
+                     0.5)))
+          (FPLUS (FTIMES A (FDIFFERENCE 1.0 F))
+                 (FTIMES B F])
+
+(RB.INTERPOLATEEASEIN
+  [LAMBDA (A B W)                                            (* Square the clamped weight directly 
+                                                             to get the ease-in factor)
+    (LET* ((W-CLAMPED (RB.CLAMP W 0.0 1.0))
+           (F (FTIMES W-CLAMPED W-CLAMPED)))
+          (FPLUS (FTIMES A (FDIFFERENCE 1.0 F))
+                 (FTIMES B F])
+
+(RB.INTERPOLATEEASEOUT
+  [LAMBDA (A B W)
+    (LET* [(W-CLAMPED (RB.CLAMP W 0.0 1.0))
+           (INVERTED (FDIFFERENCE 1.0 W-CLAMPED))
+           (F (FDIFFERENCE 1.0 (FTIMES INVERTED INVERTED]
+          (FPLUS (FTIMES A (FDIFFERENCE 1.0 F))
+                 (FTIMES B F])
+
 (RB.LERP
   [LAMBDA (A B W)
     (FPLUS (FTIMES A (FDIFFERENCE 1.0 W))
@@ -114,11 +188,28 @@
           (DRAWLINE 0 HALF.HEIGHT WIDTH HALF.HEIGHT 1 'INVERT W NIL '(1 3))
           W])
 
+(RB.POLTOCART
+  [LAMBDA (R ANGLE RADIANSFLAG)                              (* Polar to cartesian function.
+                                                             Returns a pair.)
+    (CONS (FTIMES R (COS ANGLE RADIANSFLAG))
+          (FTIMES R (SIN ANGLE RADIANSFLAG])
+
+(RB.SMOOTHERSTEP
+  [LAMBDA (A B W)                                            (* Applies smootherstep interpolation 
+                                                             between A and B with Weight.)
+    (LET ((W-CLAMPED (RB.CLAMP (FQUOTIENT (FDIFFERENCE W A)
+                                      (FDIFFERENCE B A))
+                            0.0 1.0)))
+         (FTIMES W-CLAMPED W-CLAMPED W-CLAMPED (FPLUS (FTIMES W-CLAMPED (FDIFFERENCE (FTIMES 
+                                                                                            W-CLAMPED
+                                                                                            6.0)
+                                                                               15.0))
+                                                      10.0])
+
 (RB.SMOOTHSTEP
-  [LAMBDA (A B W)
-
-    (* ;; "Uses the %"smoothstep%" interpolation algorithm")
-
+  [LAMBDA (A B W)                                            (* Smoothstep algorithm.
+                                                             Interpolates between A and B using 
+                                                             Weight.)
     [SETQ W (FTIMES W W (FDIFFERENCE 3 (FTIMES 2 W]
     (FPLUS A (FTIMES W (FDIFFERENCE B A])
 
@@ -315,6 +406,20 @@
          (V3F.SETY V3F1 OLDX)
          V3F1])
 
+(V3F.PRINT
+  [LAMBDA (V STREAM)
+    (PRIN1 "#{V3F}<X:" STREAM)
+    (PRIN1 (fetch (V3F X) of V)
+           STREAM)
+    (PRIN1 " Y:" STREAM)
+    (PRIN1 (fetch (V3F Y) of V)
+           STREAM)
+    (PRIN1 " Z:" STREAM)
+    (PRIN1 (fetch (V3F Z) of V)
+           STREAM)
+    (PRIN1 ">" STREAM)
+    T])
+
 (V3F.RANDOM2D
   [LAMBDA NIL
     (V3F.RANDOM2D! (V3F.NEW 0.0 0.0 0.0])
@@ -433,22 +538,31 @@
 (V3F.Z
   [LAMBDA (V3F)
     (fetch (V3F Z) of V3F])
+
+(V3F.ZEROP
+  [LAMBDA (V3F)
+    (AND (ZEROP (fetch X of V3F))
+         (ZEROP (fetch Y of V3F))
+         (ZEROP (fetch Z of V3F])
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1406 12417 (RB.CLAMP 1416 . 1571) (RB.COHERENTNOISE 1573 . 2004) (RB.DIST2D 2006 . 2180
-) (RB.DIST3D 2182 . 2429) (RB.INTEGERNOISE 2431 . 3150) (RB.LERP 3152 . 3249) (RB.NOISEGRAPH 3251 . 
-4395) (RB.SMOOTHSTEP 4397 . 4594) (V3F.ADD 4596 . 4686) (V3F.ADD! 4688 . 4865) (V3F.COPY 4867 . 4920) 
-(V3F.COPY! 4922 . 5113) (V3F.CROSS 5115 . 5209) (V3F.CROSS! 5211 . 5714) (V3F.DELTA2D 5716 . 6098) (
-V3F.DIST 6100 . 6497) (V3F.DIV 6499 . 6583) (V3F.DIV! 6585 . 6747) (V3F.DOT 6749 . 6999) (V3F.EQUALP 
-7001 . 7064) (V3F.FROMPOSITION 7066 . 7223) (V3F.FROMPOSITION! 7225 . 7394) (V3F.HEADING 7396 . 7485) 
-(V3F.HEADING! 7487 . 7687) (V3F.LERP 7689 . 7789) (V3F.LERP! 7791 . 8218) (V3F.LIMIT 8220 . 8316) (
-V3F.LIMIT! 8318 . 8530) (V3F.MAG 8532 . 8591) (V3F.MAGSQ 8593 . 8742) (V3F.NEGATE 8744 . 8816) (
-V3F.NEGATE! 8818 . 8968) (V3F.NEW 8970 . 9099) (V3F.NORMALIZE 9101 . 9179) (V3F.NORMALIZE! 9181 . 9345
-) (V3F.PERP2D 9347 . 9419) (V3F.PERP2D! 9421 . 9594) (V3F.RANDOM2D 9596 . 9677) (V3F.RANDOM2D! 9679 . 
-9922) (V3F.RANDOM3D 9924 . 10005) (V3F.RANDOM3D! 10007 . 10484) (V3F.ROT2D 10486 . 10580) (V3F.ROT2D! 
-10582 . 10715) (V3F.SCALE 10717 . 10805) (V3F.SCALE! 10807 . 10962) (V3F.SETMAG 10964 . 11062) (
-V3F.SETMAG! 11064 . 11165) (V3F.SETX 11167 . 11247) (V3F.SETXYZ 11249 . 11422) (V3F.SETY 11424 . 11504
-) (V3F.SETZ 11506 . 11586) (V3F.SUB 11588 . 11678) (V3F.SUB! 11680 . 11893) (V3F.SURFACENORMAL 11895
- . 12088) (V3F.TOPOSITION 12090 . 12223) (V3F.X 12225 . 12287) (V3F.Y 12289 . 12351) (V3F.Z 12353 . 
-12415)))))
+  (FILEMAP (NIL (2879 17096 (RB.CARTTOPOL 2889 . 3184) (RB.CLAMP 3186 . 3341) (RB.COHERENTNOISE 3343 . 
+3774) (RB.DIST2D 3776 . 3950) (RB.DIST3D 3952 . 4199) (RB.INTEGERNOISE 4201 . 4920) (RB.INTERPOLATECOS
+ 4922 . 5380) (RB.INTERPOLATEEASEIN 5382 . 5775) (RB.INTERPOLATEEASEOUT 5777 . 6056) (RB.LERP 6058 . 
+6155) (RB.NOISEGRAPH 6157 . 7301) (RB.POLTOCART 7303 . 7589) (RB.SMOOTHERSTEP 7591 . 8410) (
+RB.SMOOTHSTEP 8412 . 8789) (V3F.ADD 8791 . 8881) (V3F.ADD! 8883 . 9060) (V3F.COPY 9062 . 9115) (
+V3F.COPY! 9117 . 9308) (V3F.CROSS 9310 . 9404) (V3F.CROSS! 9406 . 9909) (V3F.DELTA2D 9911 . 10293) (
+V3F.DIST 10295 . 10692) (V3F.DIV 10694 . 10778) (V3F.DIV! 10780 . 10942) (V3F.DOT 10944 . 11194) (
+V3F.EQUALP 11196 . 11259) (V3F.FROMPOSITION 11261 . 11418) (V3F.FROMPOSITION! 11420 . 11589) (
+V3F.HEADING 11591 . 11680) (V3F.HEADING! 11682 . 11882) (V3F.LERP 11884 . 11984) (V3F.LERP! 11986 . 
+12413) (V3F.LIMIT 12415 . 12511) (V3F.LIMIT! 12513 . 12725) (V3F.MAG 12727 . 12786) (V3F.MAGSQ 12788
+ . 12937) (V3F.NEGATE 12939 . 13011) (V3F.NEGATE! 13013 . 13163) (V3F.NEW 13165 . 13294) (
+V3F.NORMALIZE 13296 . 13374) (V3F.NORMALIZE! 13376 . 13540) (V3F.PERP2D 13542 . 13614) (V3F.PERP2D! 
+13616 . 13789) (V3F.PRINT 13791 . 14115) (V3F.RANDOM2D 14117 . 14198) (V3F.RANDOM2D! 14200 . 14443) (
+V3F.RANDOM3D 14445 . 14526) (V3F.RANDOM3D! 14528 . 15005) (V3F.ROT2D 15007 . 15101) (V3F.ROT2D! 15103
+ . 15236) (V3F.SCALE 15238 . 15326) (V3F.SCALE! 15328 . 15483) (V3F.SETMAG 15485 . 15583) (V3F.SETMAG!
+ 15585 . 15686) (V3F.SETX 15688 . 15768) (V3F.SETXYZ 15770 . 15943) (V3F.SETY 15945 . 16025) (V3F.SETZ
+ 16027 . 16107) (V3F.SUB 16109 . 16199) (V3F.SUB! 16201 . 16414) (V3F.SURFACENORMAL 16416 . 16609) (
+V3F.TOPOSITION 16611 . 16744) (V3F.X 16746 . 16808) (V3F.Y 16810 . 16872) (V3F.Z 16874 . 16936) (
+V3F.ZEROP 16938 . 17094)))))
 STOP
