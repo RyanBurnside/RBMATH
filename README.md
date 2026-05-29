@@ -12,6 +12,7 @@ TODO
 https://libnoise.sourceforge.net/noisegen/index.html
 
 
-<img width="479" height="465" alt="Screenshot_20260525_160442" src="https://github.com/user-attachments/assets/180b49ec-e23c-4d18-9e58-ddec5c9d0f1e" />
+<img width="734" height="449" alt="Screenshot_20260529_170924" src="https://github.com/user-attachments/assets/da1bc9b0-9ca2-4c0b-9bd3-57b3eb289b9d" />
+
 
 
