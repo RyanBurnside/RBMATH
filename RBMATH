@@ -1,28 +1,31 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "29-May-2026 16:08:36" {DSK}<home>ryan>il>RBMATH.;55 17119  
+(FILECREATED "30-May-2026 20:33:13" {DSK}<home>ryan>il>RBMATH.;58 25549  
 
       :CHANGES-TO (VARS RBMATHCOMS)
-                  (FNS V3F.PRINT V3F.ZEROP RB.CARTTOPOL RB.SMOOTHSTEP RB.INTERPOLATEEASEIN 
-                       RB.INTERPOLATEEASEOUT RB.INTERPOLATECOS RB.SMOOTHERSTEP)
-                  (RECORDS MATRIX44)
+                  (FNS M44.TIMESM44 MT44.TIMESM44 M44.TIMESV3F M44.NEW MAT44*MAT44 MAT44.TIMESMAT44 
+                       MAT44.TIMESV3F)
+                  (RECORDS V4F)
+                  (DEFINE-TYPES V4F)
 
-      :PREVIOUS-DATE "28-May-2026 21:23:43" {DSK}<home>ryan>il>RBMATH.;51)
+      :PREVIOUS-DATE "29-May-2026 16:08:36" {DSK}<home>ryan>il>RBMATH.;55)
 
 
 (PRETTYCOMPRINT RBMATHCOMS)
 
 (RPAQQ RBMATHCOMS
-       ((RECORDS MATRIX44 V3F)
-        (FNS RB.CARTTOPOL RB.CLAMP RB.COHERENTNOISE RB.DIST2D RB.DIST3D RB.INTEGERNOISE 
-             RB.INTERPOLATECOS RB.INTERPOLATEEASEIN RB.INTERPOLATEEASEOUT RB.LERP RB.NOISEGRAPH 
-             RB.POLTOCART RB.SMOOTHERSTEP RB.SMOOTHSTEP V3F.ADD V3F.ADD! V3F.COPY V3F.COPY! V3F.CROSS
-             V3F.CROSS! V3F.DELTA2D V3F.DIST V3F.DIV V3F.DIV! V3F.DOT V3F.EQUALP V3F.FROMPOSITION 
-             V3F.FROMPOSITION! V3F.HEADING V3F.HEADING! V3F.LERP V3F.LERP! V3F.LIMIT V3F.LIMIT! 
-             V3F.MAG V3F.MAGSQ V3F.NEGATE V3F.NEGATE! V3F.NEW V3F.NORMALIZE V3F.NORMALIZE! V3F.PERP2D
-             V3F.PERP2D! V3F.PRINT V3F.RANDOM2D V3F.RANDOM2D! V3F.RANDOM3D V3F.RANDOM3D! V3F.ROT2D 
-             V3F.ROT2D! V3F.SCALE V3F.SCALE! V3F.SETMAG V3F.SETMAG! V3F.SETX V3F.SETXYZ V3F.SETY 
-             V3F.SETZ V3F.SUB V3F.SUB! V3F.SURFACENORMAL V3F.TOPOSITION V3F.X V3F.Y V3F.Z V3F.ZEROP)))
+       ((RECORDS MATRIX44 V3F V4F)
+        (FNS M44.NEW M44.TIMESM44 M44.TIMESV3F RB.CARTTOPOL RB.CLAMP RB.COHERENTNOISE RB.DIST2D 
+             RB.DIST3D RB.INTEGERNOISE RB.INTERPOLATECOS RB.INTERPOLATEEASEIN RB.INTERPOLATEEASEOUT 
+             RB.LERP RB.NOISEGRAPH RB.POLTOCART RB.SMOOTHERSTEP RB.SMOOTHSTEP V3F.ADD V3F.ADD! 
+             V3F.COPY V3F.COPY! V3F.CROSS V3F.CROSS! V3F.DELTA2D V3F.DIST V3F.DIV V3F.DIV! V3F.DOT 
+             V3F.EQUALP V3F.FROMPOSITION V3F.FROMPOSITION! V3F.HEADING V3F.HEADING! V3F.LERP 
+             V3F.LERP! V3F.LIMIT V3F.LIMIT! V3F.MAG V3F.MAGSQ V3F.NEGATE V3F.NEGATE! V3F.NEW 
+             V3F.NORMALIZE V3F.NORMALIZE! V3F.PERP2D V3F.PERP2D! V3F.PRINT V3F.RANDOM2D V3F.RANDOM2D!
+             V3F.RANDOM3D V3F.RANDOM3D! V3F.ROT2D V3F.ROT2D! V3F.SCALE V3F.SCALE! V3F.SETMAG 
+             V3F.SETMAG! V3F.SETX V3F.SETXYZ V3F.SETY V3F.SETZ V3F.SUB V3F.SUB! V3F.SURFACENORMAL 
+             V3F.TOPOSITION V3F.X V3F.Y V3F.Z V3F.ZEROP)
+        (DEFINE-TYPES V4F)))
 (DECLARE%: EVAL@COMPILE
 
 (DATATYPE MATRIX44 ((M00 FLOATP)
@@ -45,6 +48,11 @@
 (DATATYPE V3F ((X FLOATP)
                (Y FLOATP)
                (Z FLOATP)))
+
+(DATATYPE V4F ((X FLOATP)
+               (Y FLOATP)
+               (Z FLOATP)
+               (W FLOATP)))
 )
 
 (/DECLAREDATATYPE 'MATRIX44
@@ -73,7 +81,123 @@
          (V3F 2 FLOATP)
          (V3F 4 FLOATP))
        '6)
+
+(/DECLAREDATATYPE 'V4F '(FLOATP FLOATP FLOATP FLOATP)
+       '((V4F 0 FLOATP)
+         (V4F 2 FLOATP)
+         (V4F 4 FLOATP)
+         (V4F 6 FLOATP))
+       '8)
 (DEFINEQ
+
+(M44.NEW
+  [LAMBDA (M00 M10 M20 M30 M01 M11 M21 M31 M02 M12 M22 M32 M03 M13 M23 M33)
+    (create MATRIX44
+           M00 _ M00
+           M10 _ M10
+           M20 _ M20
+           M30 _ M30
+           M01 _ M01
+           M11 _ M11
+           M21 _ M21
+           M31 _ M31
+           M02 _ M02
+           M12 _ M12
+           M22 _ M22
+           M32 _ M32
+           M03 _ M03
+           M13 _ M13
+           M23 _ M23
+           M33 _ M33])
+
+(M44.TIMESM44
+  [LAMBDA (A B)                                              (* Multiplies two 4x4 matricies 
+                                                             together into a fresh 4x4 matrix.)
+    (with MATRIX44 A (create MATRIX44
+                            M00 _ [FPLUS (FPLUS (FTIMES M00 (fetch (MATRIX44 M00) of B))
+                                                (FTIMES M01 (fetch (MATRIX44 M10) of B)))
+                                         (FPLUS (FTIMES M02 (fetch (MATRIX44 M20) of B))
+                                                (FTIMES M03 (fetch (MATRIX44 M30) of B]
+                            M01 _ [FPLUS (FPLUS (FTIMES M00 (fetch (MATRIX44 M01) of B))
+                                                (FTIMES M01 (fetch (MATRIX44 M11) of B)))
+                                         (FPLUS (FTIMES M02 (fetch (MATRIX44 M21) of B))
+                                                (FTIMES M03 (fetch (MATRIX44 M31) of B]
+                            M02 _ [FPLUS (FPLUS (FTIMES M00 (fetch (MATRIX44 M02) of B))
+                                                (FTIMES M01 (fetch (MATRIX44 M12) of B)))
+                                         (FPLUS (FTIMES M02 (fetch (MATRIX44 M22) of B))
+                                                (FTIMES M03 (fetch (MATRIX44 M32) of B]
+                            M03 _ [FPLUS (FPLUS (FTIMES M00 (fetch (MATRIX44 M03) of B))
+                                                (FTIMES M01 (fetch (MATRIX44 M13) of B)))
+                                         (FPLUS (FTIMES M02 (fetch (MATRIX44 M23) of B))
+                                                (FTIMES M03 (fetch (MATRIX44 M33) of B]
+                            M10 _ [FPLUS (FPLUS (FTIMES M10 (fetch (MATRIX44 M00) of B))
+                                                (FTIMES M11 (fetch (MATRIX44 M10) of B)))
+                                         (FPLUS (FTIMES M12 (fetch (MATRIX44 M20) of B))
+                                                (FTIMES M13 (fetch (MATRIX44 M30) of B]
+                            M11 _ [FPLUS (FPLUS (FTIMES M10 (fetch (MATRIX44 M01) of B))
+                                                (FTIMES M11 (fetch (MATRIX44 M11) of B)))
+                                         (FPLUS (FTIMES M12 (fetch (MATRIX44 M21) of B))
+                                                (FTIMES M13 (fetch (MATRIX44 M31) of B]
+                            M12 _ [FPLUS (FPLUS (FTIMES M10 (fetch (MATRIX44 M02) of B))
+                                                (FTIMES M11 (fetch (MATRIX44 M12) of B)))
+                                         (FPLUS (FTIMES M12 (fetch (MATRIX44 M22) of B))
+                                                (FTIMES M13 (fetch (MATRIX44 M32) of B]
+                            M13 _ [FPLUS (FPLUS (FTIMES M10 (fetch (MATRIX44 M03) of B))
+                                                (FTIMES M11 (fetch (MATRIX44 M13) of B)))
+                                         (FPLUS (FTIMES M12 (fetch (MATRIX44 M23) of B))
+                                                (FTIMES M13 (fetch (MATRIX44 M33) of B]
+                            M20 _ [FPLUS (FPLUS (FTIMES M20 (fetch (MATRIX44 M00) of B))
+                                                (FTIMES M21 (fetch (MATRIX44 M10) of B)))
+                                         (FPLUS (FTIMES M22 (fetch (MATRIX44 M20) of B))
+                                                (FTIMES M23 (fetch (MATRIX44 M30) of B]
+                            M21 _ [FPLUS (FPLUS (FTIMES M20 (fetch (MATRIX44 M01) of B))
+                                                (FTIMES M21 (fetch (MATRIX44 M11) of B)))
+                                         (FPLUS (FTIMES M22 (fetch (MATRIX44 M21) of B))
+                                                (FTIMES M23 (fetch (MATRIX44 M31) of B]
+                            M22 _ [FPLUS (FPLUS (FTIMES M20 (fetch (MATRIX44 M02) of B))
+                                                (FTIMES M21 (fetch (MATRIX44 M12) of B)))
+                                         (FPLUS (FTIMES M22 (fetch (MATRIX44 M22) of B))
+                                                (FTIMES M23 (fetch (MATRIX44 M32) of B]
+                            M23 _ [FPLUS (FPLUS (FTIMES M20 (fetch (MATRIX44 M03) of B))
+                                                (FTIMES M21 (fetch (MATRIX44 M13) of B)))
+                                         (FPLUS (FTIMES M22 (fetch (MATRIX44 M23) of B))
+                                                (FTIMES M23 (fetch (MATRIX44 M33) of B]
+                            M30 _ [FPLUS (FPLUS (FTIMES M30 (fetch (MATRIX44 M00) of B))
+                                                (FTIMES M31 (fetch (MATRIX44 M10) of B)))
+                                         (FPLUS (FTIMES M32 (fetch (MATRIX44 M20) of B))
+                                                (FTIMES M33 (fetch (MATRIX44 M30) of B]
+                            M31 _ [FPLUS (FPLUS (FTIMES M30 (fetch (MATRIX44 M01) of B))
+                                                (FTIMES M31 (fetch (MATRIX44 M11) of B)))
+                                         (FPLUS (FTIMES M32 (fetch (MATRIX44 M21) of B))
+                                                (FTIMES M33 (fetch (MATRIX44 M31) of B]
+                            M32 _ [FPLUS (FPLUS (FTIMES M30 (fetch (MATRIX44 M02) of B))
+                                                (FTIMES M31 (fetch (MATRIX44 M12) of B)))
+                                         (FPLUS (FTIMES M32 (fetch (MATRIX44 M22) of B))
+                                                (FTIMES M33 (fetch (MATRIX44 M32) of B]
+                            M33 _ (FPLUS (FPLUS (FTIMES M30 (fetch (MATRIX44 M03) of B))
+                                                (FTIMES M31 (fetch (MATRIX44 M13) of B)))
+                                         (FPLUS (FTIMES M32 (fetch (MATRIX44 M23) of B))
+                                                (FTIMES M33 (fetch (MATRIX44 M33) of B])
+
+(M44.TIMESV3F
+  [LAMBDA (MAT44 V3F)
+
+         (* Multiplies a MATRIX44 by a V3F extending the V3F with a W value of 1.0 for 
+         homogenious coordinates #.(SEDIT::MAKE-BROKEN-ATOM "."))
+
+    (with MATRIX44 MAT44 (with V3F V3F (create V3F
+                                              X _ (FPLUS (FTIMES M00 X)
+                                                         (FTIMES M01 Y)
+                                                         (FTIMES M02 Z)
+                                                         M03)
+                                              Y _ (FPLUS (FTIMES M10 X)
+                                                         (FTIMES M11 Y)
+                                                         (FTIMES M12 Z)
+                                                         M13)
+                                              Z _ (FPLUS (FTIMES M20 X)
+                                                         (FTIMES M21 Y)
+                                                         (FTIMES M22 Z)
+                                                         M23])
 
 (RB.CARTTOPOL
   [LAMBDA (X Y)                                              (* Given an X and Y return a pair
@@ -545,24 +669,27 @@
          (ZEROP (fetch Y of V3F))
          (ZEROP (fetch Z of V3F])
 )
+
+(DEF-DEFINE-TYPE V4F "Description string")
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (2879 17096 (RB.CARTTOPOL 2889 . 3184) (RB.CLAMP 3186 . 3341) (RB.COHERENTNOISE 3343 . 
-3774) (RB.DIST2D 3776 . 3950) (RB.DIST3D 3952 . 4199) (RB.INTEGERNOISE 4201 . 4920) (RB.INTERPOLATECOS
- 4922 . 5380) (RB.INTERPOLATEEASEIN 5382 . 5775) (RB.INTERPOLATEEASEOUT 5777 . 6056) (RB.LERP 6058 . 
-6155) (RB.NOISEGRAPH 6157 . 7301) (RB.POLTOCART 7303 . 7589) (RB.SMOOTHERSTEP 7591 . 8410) (
-RB.SMOOTHSTEP 8412 . 8789) (V3F.ADD 8791 . 8881) (V3F.ADD! 8883 . 9060) (V3F.COPY 9062 . 9115) (
-V3F.COPY! 9117 . 9308) (V3F.CROSS 9310 . 9404) (V3F.CROSS! 9406 . 9909) (V3F.DELTA2D 9911 . 10293) (
-V3F.DIST 10295 . 10692) (V3F.DIV 10694 . 10778) (V3F.DIV! 10780 . 10942) (V3F.DOT 10944 . 11194) (
-V3F.EQUALP 11196 . 11259) (V3F.FROMPOSITION 11261 . 11418) (V3F.FROMPOSITION! 11420 . 11589) (
-V3F.HEADING 11591 . 11680) (V3F.HEADING! 11682 . 11882) (V3F.LERP 11884 . 11984) (V3F.LERP! 11986 . 
-12413) (V3F.LIMIT 12415 . 12511) (V3F.LIMIT! 12513 . 12725) (V3F.MAG 12727 . 12786) (V3F.MAGSQ 12788
- . 12937) (V3F.NEGATE 12939 . 13011) (V3F.NEGATE! 13013 . 13163) (V3F.NEW 13165 . 13294) (
-V3F.NORMALIZE 13296 . 13374) (V3F.NORMALIZE! 13376 . 13540) (V3F.PERP2D 13542 . 13614) (V3F.PERP2D! 
-13616 . 13789) (V3F.PRINT 13791 . 14115) (V3F.RANDOM2D 14117 . 14198) (V3F.RANDOM2D! 14200 . 14443) (
-V3F.RANDOM3D 14445 . 14526) (V3F.RANDOM3D! 14528 . 15005) (V3F.ROT2D 15007 . 15101) (V3F.ROT2D! 15103
- . 15236) (V3F.SCALE 15238 . 15326) (V3F.SCALE! 15328 . 15483) (V3F.SETMAG 15485 . 15583) (V3F.SETMAG!
- 15585 . 15686) (V3F.SETX 15688 . 15768) (V3F.SETXYZ 15770 . 15943) (V3F.SETY 15945 . 16025) (V3F.SETZ
- 16027 . 16107) (V3F.SUB 16109 . 16199) (V3F.SUB! 16201 . 16414) (V3F.SURFACENORMAL 16416 . 16609) (
-V3F.TOPOSITION 16611 . 16744) (V3F.X 16746 . 16808) (V3F.Y 16810 . 16872) (V3F.Z 16874 . 16936) (
-V3F.ZEROP 16938 . 17094)))))
+  (FILEMAP (NIL (3233 25478 (M44.NEW 3243 . 3694) (M44.TIMESM44 3696 . 10166) (M44.TIMESV3F 10168 . 
+11269) (RB.CARTTOPOL 11271 . 11566) (RB.CLAMP 11568 . 11723) (RB.COHERENTNOISE 11725 . 12156) (
+RB.DIST2D 12158 . 12332) (RB.DIST3D 12334 . 12581) (RB.INTEGERNOISE 12583 . 13302) (RB.INTERPOLATECOS 
+13304 . 13762) (RB.INTERPOLATEEASEIN 13764 . 14157) (RB.INTERPOLATEEASEOUT 14159 . 14438) (RB.LERP 
+14440 . 14537) (RB.NOISEGRAPH 14539 . 15683) (RB.POLTOCART 15685 . 15971) (RB.SMOOTHERSTEP 15973 . 
+16792) (RB.SMOOTHSTEP 16794 . 17171) (V3F.ADD 17173 . 17263) (V3F.ADD! 17265 . 17442) (V3F.COPY 17444
+ . 17497) (V3F.COPY! 17499 . 17690) (V3F.CROSS 17692 . 17786) (V3F.CROSS! 17788 . 18291) (V3F.DELTA2D 
+18293 . 18675) (V3F.DIST 18677 . 19074) (V3F.DIV 19076 . 19160) (V3F.DIV! 19162 . 19324) (V3F.DOT 
+19326 . 19576) (V3F.EQUALP 19578 . 19641) (V3F.FROMPOSITION 19643 . 19800) (V3F.FROMPOSITION! 19802 . 
+19971) (V3F.HEADING 19973 . 20062) (V3F.HEADING! 20064 . 20264) (V3F.LERP 20266 . 20366) (V3F.LERP! 
+20368 . 20795) (V3F.LIMIT 20797 . 20893) (V3F.LIMIT! 20895 . 21107) (V3F.MAG 21109 . 21168) (V3F.MAGSQ
+ 21170 . 21319) (V3F.NEGATE 21321 . 21393) (V3F.NEGATE! 21395 . 21545) (V3F.NEW 21547 . 21676) (
+V3F.NORMALIZE 21678 . 21756) (V3F.NORMALIZE! 21758 . 21922) (V3F.PERP2D 21924 . 21996) (V3F.PERP2D! 
+21998 . 22171) (V3F.PRINT 22173 . 22497) (V3F.RANDOM2D 22499 . 22580) (V3F.RANDOM2D! 22582 . 22825) (
+V3F.RANDOM3D 22827 . 22908) (V3F.RANDOM3D! 22910 . 23387) (V3F.ROT2D 23389 . 23483) (V3F.ROT2D! 23485
+ . 23618) (V3F.SCALE 23620 . 23708) (V3F.SCALE! 23710 . 23865) (V3F.SETMAG 23867 . 23965) (V3F.SETMAG!
+ 23967 . 24068) (V3F.SETX 24070 . 24150) (V3F.SETXYZ 24152 . 24325) (V3F.SETY 24327 . 24407) (V3F.SETZ
+ 24409 . 24489) (V3F.SUB 24491 . 24581) (V3F.SUB! 24583 . 24796) (V3F.SURFACENORMAL 24798 . 24991) (
+V3F.TOPOSITION 24993 . 25126) (V3F.X 25128 . 25190) (V3F.Y 25192 . 25254) (V3F.Z 25256 . 25318) (
+V3F.ZEROP 25320 . 25476)))))
 STOP
