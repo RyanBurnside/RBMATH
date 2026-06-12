@@ -11,8 +11,7 @@ Except for V3F.SETXYZ, V3F.SETX, V3F.SETY, V3F.SETZ which do mutate.
 TODO
 https://libnoise.sourceforge.net/noisegen/index.html
 
-
-<img width="734" height="449" alt="Screenshot_20260529_170924" src="https://github.com/user-attachments/assets/da1bc9b0-9ca2-4c0b-9bd3-57b3eb289b9d" />
+<img width="737" height="460" alt="Screenshot_20260612_012046" src="https://github.com/user-attachments/assets/58cbd054-f62a-4524-a61f-d34fc8e827f5" />
 
 
 
